@@ -27,20 +27,17 @@ function [vertices_rot, centroids_rot, normals_rot] = rotateBody(vertices, ...
 %   normals_rot: 3xN array of the rotated normals of the faces
 %
 
-import space_math_utilities.rotateAroundPoint
-import space_math_utilities.rotateAroundOrigin
-
 %% Vertices
 % Reshape 3x3xN vertices array into a 3x(3*N) matrix
 vertices_list = reshape(vertices, 3, []);
 % Rotate vertices
-vertices_list = rotateAroundPoint(vertices_list, rotation_angle__rad, rotation_direction, rotation_hinge_point);
+vertices_list = smu.rotateAroundPoint(vertices_list, rotation_angle__rad, rotation_direction, rotation_hinge_point);
 % Reshape vertices matrix back into 3x3xN array
 vertices_rot = reshape(vertices_list, 3, 3, []);
 
 %% Centroids
-centroids_rot = rotateAroundPoint(centroids, rotation_angle__rad, rotation_direction, rotation_hinge_point);
+centroids_rot = smu.rotateAroundPoint(centroids, rotation_angle__rad, rotation_direction, rotation_hinge_point);
 
 %% Normals
-normals_rot = rotateAroundOrigin(normals, rotation_angle__rad, rotation_direction);
+normals_rot = smu.rotateAroundOrigin(normals, rotation_angle__rad, rotation_direction);
 end

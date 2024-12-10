@@ -53,8 +53,6 @@ function [aerodynamic_force_B__N, ...
 %                               center of mass (origin of body frame) expressed in the body frame
 %
 
-import space_math_utilities.cpm
-
 %% Abbreviations
 q_BI = quaternion(attitude_quaternion_BI');
 omega = rotational_velocity_BI_B__rad_per_s;
@@ -128,7 +126,7 @@ ind_not_shadowed = ~determineShadowedTriangles(vertices_B, centroids_B, normals_
 %% Calculate forces and torques
 % Determine individual relative velocity of each face by adding the term due to rotation
 % of satellite to the relative velocity of the satellite's center of mass
-v_indiv_B = v_rel_B - cpm(omega) * centroids_B(:, ind_not_shadowed);
+v_indiv_B = v_rel_B - smu.cpm(omega) * centroids_B(:, ind_not_shadowed);
 
 % Direction of individual relative velocity
 v_indiv_norm = vecnorm(v_indiv_B);
