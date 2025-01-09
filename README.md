@@ -1,4 +1,4 @@
-# Simplified VLEO Aerodynamics CORE
+# VLEO Aerodynamics CORE
 This repository contains functions to calculate the aerodynamic forces and moments acting on a satellite in a VLEO environment. The code is based on the Aerodynamic Database for Satellites [ADBSat](https://github.com/nhcrisp/ADBSat) and the corresponding references [1] and [2].
 
 This repository allows for a simple rotation of geometries without providing new geometry files. Instead, rotation directions and hinge points are provided for each body. Using these, a rotation can be performed by specifying the rotation angle. This allows for a usage of this aerodynamics model within a simulator where the orientation of aerodynamic control surfaces is controlled by the attitude control system and needs to be updated continuously.
