@@ -54,7 +54,7 @@ function [aerodynamic_force_B__N, ...
 %
 
 %% Abbreviations
-q_BI = quaternion(attitude_quaternion_BI');
+q_BI = attitude_quaternion_BI;
 omega = rotational_velocity_BI_B__rad_per_s;
 v_rel_I = wind_velocity_I_I__m_per_s - velocity_I_I__m_per_s;
 
@@ -118,7 +118,7 @@ end
 %  residual atmosphere are ignored. 
 
 % Transform wind velocity into body frame
-v_rel_B = rotateframe(q_BI, v_rel_I')';
+v_rel_B = smu.unitQuat.att.transformVector(q_BI, v_rel_I);
 v_rel_dir_B = v_rel_B ./ norm(v_rel_B);
 
 ind_not_shadowed = ~determineShadowedTriangles(vertices_B, centroids_B, normals_B, v_rel_dir_B);
