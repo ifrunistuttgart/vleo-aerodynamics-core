@@ -38,10 +38,10 @@ function bodies = importMultipleBodies(object_files, ...
 
 arguments
     object_files (1,:) string {mustBeFile}
-    rotation_hinge_points_CAD (3,:) {mustBeNumeric, mustBeReal, mustBeEqualLength(object_files, rotation_hinge_points_CAD, 2, 2)}
-    rotation_directions_CAD (3,:) {mustBeNumeric, mustBeReal, mustBeEqualLength(object_files, rotation_directions_CAD, 2, 2)}
-    temperatures__K (1,:) cell {mustBeEqualLength(object_files, temperatures__K, 2, 2)}
-    energy_accommodation_coefficients (1,:) cell {mustBeEqualLength(object_files, energy_accommodation_coefficients, 2, 2)}
+    rotation_hinge_points_CAD (3,:) {mustBeNumeric, mustBeReal, smu.argumentValidation.mustBeEqualLength(object_files, rotation_hinge_points_CAD, 2, 2)}
+    rotation_directions_CAD (3,:) {mustBeNumeric, mustBeReal, smu.argumentValidation.mustBeEqualLength(object_files, rotation_directions_CAD, 2, 2)}
+    temperatures__K (1,:) cell {smu.argumentValidation.mustBeEqualLength(object_files, temperatures__K, 2, 2)}
+    energy_accommodation_coefficients (1,:) cell {smu.argumentValidation.mustBeEqualLength(object_files, energy_accommodation_coefficients, 2, 2)}
     DCM_B_from_CAD (3,3) {mustBeNumeric, mustBeReal}
     CoM_CAD (3,1) {mustBeNumeric, mustBeReal}
 end
@@ -108,15 +108,4 @@ for i = 1:num_bodies
     bodies{i}.energy_accommodation_coefficients = nan(1, current_num_faces);
     bodies{i}.energy_accommodation_coefficients(:) = current_energy_accommodation_coefficients; % if scalar, it will be expanded to the correct size
 end
-end
-
-function mustBeEqualLength(a,b, dimA, dimB)
-    % Test for equal size
-    size_A = size(a);
-    size_B = size(b);
-    if size_A(dimA) ~= size_B(dimB)
-        eid = 'Length:notEqual';
-        msg = sprintf('Length of dimension %d of first input must equal length of dimension %d second input.', dimA, dimB);
-        error(eid,msg)
-    end
 end
