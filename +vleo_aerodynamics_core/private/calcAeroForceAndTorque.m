@@ -51,7 +51,7 @@ function [aeroForce__N, aeroTorque__Nm] = calcAeroForceAndTorque(areas__m2, ...
 %
 %% References:
 % [1] L. H. Sentman, “Free Molecule Flow Theory and Its Application to the Determination of Aerodynamic Forces,” Defense Technical Information Center, Fort Belvoir, VA, LMSC-448514, Oct. 1961.
-% [2] F. Tuttas, C. Traub, M. Pfeiffer, and W. Fichter, “Generalized Treatment of Energy Accommodation in Gas-Surface Interactions for Satellite Aerodynamics Applications,” 2024, arXiv. doi: 10.48550/ARXIV.2411.11597.
+% [2] F. Tuttas, C. Traub, M. Pfeiffer, and W. Fichter, “Generalized Treatment of Energy Accommodation in Gas-Surface Interactions for Satellite Aerodynamics Applications,” Acta Astronautica, vol. 236, pp. 14–19, Nov. 2025, doi: 10.1016/j.actaastro.2025.06.020.
 % [3] G. Koppenwallner, “Energy Accomodation Coefficient and Momentum Transfer Modeling,” HTG-TN-08-11, Dec. 2009.
 
 
