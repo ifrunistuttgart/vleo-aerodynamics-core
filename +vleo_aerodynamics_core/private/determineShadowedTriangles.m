@@ -127,7 +127,7 @@ end
 
 function result = checkOriginInAnyTriangle(vertices)
 % Check if any of the triangles defined by the vertices contains the origin using the barycentric coordinates method
-    for i = size(vertices, 3)
+    for i = 1:size(vertices, 3)
         
         % Coordinates of the i-th triangle's vertices a, b, and c
         a = squeeze(vertices(:,1,i));
