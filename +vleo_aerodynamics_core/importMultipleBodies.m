@@ -22,7 +22,7 @@ function bodies = importMultipleBodies(object_files, ...
 %  surface energy accommodation coefficients, and surface areas of the bodies.
 %
 %  Inputs:
-%   object_files: 1xN array of strings of the paths to the .obj files
+%   object_files: 1xN array of strings of the paths to the .obj or .m (gmsh) files
 %   rotation_hinge_points_CAD: 3xN array of the rotation hinge points of the bodies in the CAD frame
 %   rotation_directions_CAD: 3xN array of the rotation directions of the bodies in the CAD frame
 %   temperatures__K: 1xN cell array of the surface temperatures of the bodies
@@ -38,10 +38,10 @@ function bodies = importMultipleBodies(object_files, ...
 
 arguments
     object_files (1,:) string {mustBeFile}
-    rotation_hinge_points_CAD (3,:) {mustBeNumeric, mustBeReal, smu.argumentValidation.mustBeEqualLength(object_files, rotation_hinge_points_CAD, 2, 2)}
-    rotation_directions_CAD (3,:) {mustBeNumeric, mustBeReal, smu.argumentValidation.mustBeEqualLength(object_files, rotation_directions_CAD, 2, 2)}
-    temperatures__K (1,:) cell {smu.argumentValidation.mustBeEqualLength(object_files, temperatures__K, 2, 2)}
-    energy_accommodation_coefficients (1,:) cell {smu.argumentValidation.mustBeEqualLength(object_files, energy_accommodation_coefficients, 2, 2)}
+    rotation_hinge_points_CAD (3,:) {mustBeNumeric, mustBeReal}
+    rotation_directions_CAD (3,:) {mustBeNumeric, mustBeReal}
+    temperatures__K (1,:) cell {}
+    energy_accommodation_coefficients (1,:) cell {}
     DCM_B_from_CAD (3,3) {mustBeNumeric, mustBeReal}
     CoM_CAD (3,1) {mustBeNumeric, mustBeReal}
 end
@@ -58,35 +58,49 @@ if D ~= 1
     disp('New DCM_B_from_CAD:');
     disp(DCM_B_from_CAD);
 end
+% Check if first file is .gmsh and validate accordingly
+[~, ~, first_ext] = fileparts(object_files(1));
+if strcmpi(first_ext, '.m')
+    if length(object_files) > 1
+        error('When using .gmsh files, only one file is allowed.');
+    end
+    body_data = import_gmsh(object_files(1));
+end
 
 % Prepare structure of objects
 num_bodies = size(rotation_hinge_points_CAD,2);
 bodies = cell(1, num_bodies);
 
 for i = 1:num_bodies
+    switch lower(first_ext)
+        case '.obj'
+            %% Extract data from obj file
+            current_object_file = object_files(i);
 
-    %% Extract data from obj file
-    current_object_file = object_files(i);
-
-    % Vertices
-    vertices_CAD = getVerticesFromObj(current_object_file);
-
+            % Vertices
+            vertices_CAD = getVerticesFromObj(current_object_file);
+        case '.m'
+            vertices_CAD = body_data(i).vertices_CAD; % These are in CAD frame
+        otherwise
+            error('Unsupported file format: %s. Only .obj and .gmsh files are supported.', first_ext);
+    end
     % Transform vertices to body frame
     vertices_CAD_list = reshape(vertices_CAD, 3, []);
     vertices_CAD_list = vertices_CAD_list - CoM_CAD;
     vertices_B_list = DCM_B_from_CAD * vertices_CAD_list;
     vertices_B = reshape(vertices_B_list, 3, 3, []);
-
     bodies{i}.vertices_B = vertices_B;
 
     % Calculate surface centroids
     bodies{i}.centroids_B = squeeze(mean(vertices_B, 2));
+
     % Calculate surface normals
     AB_vectors = squeeze(vertices_B(:,2,:) - vertices_B(:,1,:));
     AC_vectors = squeeze(vertices_B(:,3,:) - vertices_B(:,1,:));
     cross_products = cross(AB_vectors, AC_vectors);
     cross_product_norms = vecnorm(cross_products);
     bodies{i}.normals_B = cross_products ./ cross_product_norms;
+
     % Calculate surface areas
     bodies{i}.areas = 1/2 * cross_product_norms;
 

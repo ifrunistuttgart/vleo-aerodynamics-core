@@ -1,4 +1,4 @@
-function showBodies(bodies, bodies_rotation_angles__rad, face_alpha, scale_normals, scalar_values, vectorial_values, scale_vectorial_values)
+function showBodies(bodies, bodies_rotation_angles__rad, face_alpha, scale_normals, show_labels,scalar_values, vectorial_values, scale_vectorial_values)
 % showBodies - Plot the bodies and their surface centroids and normals rotated by the given angles
 %
 %  showBodies(bodies, bodies_rotation_angles__rad, face_alpha, scale_normals, scalar_values, vectorial_values, scale_vectorial_values)
@@ -14,6 +14,7 @@ function showBodies(bodies, bodies_rotation_angles__rad, face_alpha, scale_norma
 %   bodies_rotation_angles__rad: 1xN array of the rotation angles of the bodies
 %   face_alpha: scalar, the transparency of the faces
 %   scale_normals: scalar, the scale factor for the normals
+%   show_labels: if true display label o each body
 %   scalar_values: 1xN cell array of scalar values to be plotted on the surfaces
 %   vectorial_values: 1xN cell array of vectorial values to be plotted on the surfaces
 %   scale_vectorial_values: scalar, the scale factor for the vectorial values
@@ -24,6 +25,7 @@ arguments
     bodies_rotation_angles__rad (1,:) double {mustBeReal}
     face_alpha (1,1) {mustBeNonnegative, mustBeLessThanOrEqual(face_alpha,1)} = 0.75
     scale_normals double {mustBeNonnegative} = 1
+    show_labels logical = false
     scalar_values cell = cell(1, length(bodies))
     vectorial_values cell = cell(1, length(bodies))
     scale_vectorial_values double {mustBeNonnegative} = 1
@@ -94,6 +96,14 @@ for i = 1:num_bodies
             scale_vectorial_values, 'Color', 'b');
 
     end
+    if show_labels
+        % Add text label for body index
+        label_position = mean(centroids_B, 2);
+        text(label_position(1), label_position(2), label_position(3), ...
+             sprintf('Body %d', i), 'FontSize', 12, 'FontWeight', 'bold', ...
+             'HorizontalAlignment', 'center', 'Color', 'black');
+    end
+    
     
 end
 
